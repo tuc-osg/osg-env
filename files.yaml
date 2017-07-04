@@ -1,0 +1,28 @@
+- name: Check for TUC fonts package
+  stat:
+    path: ./tucroboto.zip
+  register: tucroboto_stats
+- fail:
+    msg: "Please download tucroboto.zip first. Check the README file."
+  when: not tucroboto_stats.stat.exists   
+- shell: rm -rf ./tucroboto/
+- file: path=./tucroboto/ state=directory
+- name: Unzip fonts file
+  shell: unzip ./tucroboto.zip -d ./tucroboto/
+
+- name: Check for TUC beamer package
+  stat:
+    path: ./tucbeamer2014.zip
+  register: tucbeamer_stats
+- fail:
+    msg: "Please download tucbeamer2014.zip first. Check the README file."
+  when: not tucbeamer_stats.stat.exists   
+- shell: rm -rf ./tucbeamer/
+- file: path=./tucbeamer/ state=directory
+- name: Unzip beamer file
+  shell: unzip ./tucbeamer2014.zip -d ./tucbeamer/
+
+- name: Check for non-free fonts package
+  get_url: 
+    url: https://tug.org/fonts/getnonfreefonts/install-getnonfreefonts
+    dest: ./install-getnonfreefonts

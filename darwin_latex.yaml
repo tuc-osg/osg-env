@@ -1,0 +1,29 @@
+- name: Determine LaTex path
+  shell: kpsewhich -var-value=TEXMFHOME
+  register: kpse_output
+
+- name: Copy Latex font files to destination
+  shell: cp -R ./tucroboto/* {{ kpse_output.stdout }}/
+
+- name: Copy Latex beamer files to destination
+  shell: cp -R ./tucbeamer/tds/* {{ kpse_output.stdout }}/
+
+- name: Inform Latex about new files
+  shell: mktexlsr
+
+- name: Enable rob font
+  shell: updmap-user --enable Map=rob.map
+
+- name: Enable robc font
+  shell: updmap-user --enable Map=robc.map
+
+- name: Enable robs font
+  shell: updmap-user --enable Map=robs.map
+
+- name: Install non-free fonts package
+  shell: texlua install-getnonfreefonts
+  become: true
+
+- name: Fetch all non-free fonts
+  shell: getnonfreefonts -a -f --user
+
